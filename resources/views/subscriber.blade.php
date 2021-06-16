@@ -2,9 +2,10 @@ BEGIN:VCALENDAR
 
 VERSION:2.0
 CALSCALE:GREGORIAN
-NAME:CLick OK to Continue
-X-WR-CALNAME:Click OK to Continue
-DESCRIPTION:Click OK to continue
+PRODID:{{ \Illuminate\Support\Str::uuid() }}
+NAME:{{ $campaign->title }}
+X-WR-CALNAME:{{ $campaign->title }}
+DESCRIPTION:{{ $campaign->title }}
 
 BEGIN:VTIMEZONE
 TZID:Asia/Jakarta
@@ -19,22 +20,22 @@ END:STANDARD
 END:VTIMEZONE
 
 @foreach($campaign->messages()->where('trigger_at', '>=', now())->get() as $message)
-    @php $triggerAtInt = strtotime($message->trigger_at); @endphp
-    BEGIN:VEVENT
-    DTSTAMP:{{ date('Ymd\THis\Z', $triggerAtInt) }}
-    UID:{{ $campaign->id }}-{{ $message->id }}
-    DTSTART;TZID=Asia/Jakarta:{{ date('Ymd\THis', $triggerAtInt) }}
-    DTEND;TZID=Asia/Jakarta:{{ date('Ymd\THis', strtotime($message->trigger_at->addMinute())) }}
-    SUMMARY:{{ $message->title }}
-    DESCRIPTION:{{ $message->description }}
-    BEGIN:VALARM
-    TRIGGER:PT0H
-    REPEAT:1
-    DURATION:PT15M
-    ACTION:DISPLAY
-    DESCRIPTION:Reminder
-    END:VALARM
-    END:VEVENT
+@php $triggerAtInt = strtotime($message->trigger_at); @endphp
+BEGIN:VEVENT
+DTSTAMP:{{ date('Ymd\THis\Z', $triggerAtInt) }}
+UID:{{ $campaign->id }}-{{ $message->id }}
+DTSTART;TZID=Asia/Jakarta:{{ date('Ymd\THis', $triggerAtInt) }}
+DTEND;TZID=Asia/Jakarta:{{ date('Ymd\THis', strtotime($message->trigger_at->addMinute())) }}
+SUMMARY:{{ $message->title }}
+DESCRIPTION:{{ $message->description }}
+BEGIN:VALARM
+TRIGGER:PT0H
+REPEAT:1
+DURATION:PT15M
+ACTION:DISPLAY
+DESCRIPTION:Reminder
+END:VALARM
+END:VEVENT
 @endforeach
 
 END:VCALENDAR

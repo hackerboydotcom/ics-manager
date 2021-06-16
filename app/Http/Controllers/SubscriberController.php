@@ -33,6 +33,7 @@ class SubscriberController extends Controller
         $subscriber->campaign_id = $campaign->id;
         $subscriber->ip = Ip::getRequestIp();
         $subscriber->information = json_encode($request->header());
+        $subscriber->hit_count++;
         $subscriber->save();
 
         return response(view('subscriber', [
