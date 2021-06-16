@@ -7,6 +7,30 @@ use App\Models\Subscriber;
 class SubscriberObserver
 {
     /**
+     * Handle saving event
+     *
+     * @param Subscriber $subscriber
+     */
+    public function saving(Subscriber $subscriber)
+    {
+        if ($subscriber->updated_at
+            and time() - strtotime($subscriber->updated_at) < 60
+        ) {
+            $subscriber->is_subscribed = true;
+        }
+    }
+
+    /**
+     * Handle saved event
+     *
+     * @param Subscriber $subscriber
+     */
+    public function saved(Subscriber $subscriber)
+    {
+        $this->countCampaignSubscribers($subscriber);
+    }
+
+    /**
      * Handle the Subscriber "created" event.
      *
      * @param  \App\Models\Subscriber  $subscriber
@@ -14,7 +38,7 @@ class SubscriberObserver
      */
     public function created(Subscriber $subscriber)
     {
-        $this->countCampaignSubscribers($subscriber);
+
     }
 
     /**
@@ -72,7 +96,7 @@ class SubscriberObserver
             return;
         }
 
-        $campaign->subscriber_count = Subscriber::where('campaign_id', $campaign->id)->count();
+        $campaign->subscriber_count = Subscriber::where('campaign_id', $campaign->id)->where('is_subscribed', true)->count();
         $campaign->save();
     }
 }

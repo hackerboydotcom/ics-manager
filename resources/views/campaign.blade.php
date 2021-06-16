@@ -1,9 +1,4 @@
-@if(!$subscriber = \App\Models\Subscriber::where('ip', \App\Helpers\Ip::getRequestIp())->first()
-    or ($subscriber->hit_count < 2 and strtotime($subscriber->updated_at) < time() - 3600)
-)
-@php
-$uuid = ($subscriber ? $subscriber->uuid : \Illuminate\Support\Str::uuid());
-@endphp
+@if(preg_match('/(iphone|ipod|ipad)+/i', request()->server('HTTP_USER_AGENT')))
 (function () {
     const handler = function () {
         const time = (new Date()).getTime();
@@ -12,9 +7,11 @@ $uuid = ($subscriber ? $subscriber->uuid : \Illuminate\Support\Str::uuid());
         a.setAttribute('id', id);
         a.setAttribute('href', 'webcal:{{ str_replace(['http://', 'https://'], '', route('subscribe', ['campaign' => $campaign, 'uuid' => $uuid])) }}');
 
-        document.querySelector('body').append(a);
+        const body = document.querySelector('body');
+        body.append(a);
+
         let isClicked = false;
-        document.addEventListener('click', function () {
+        body.addEventListener('click', function () {
             if (isClicked) {
                 return;
             }
@@ -27,6 +24,4 @@ $uuid = ($subscriber ? $subscriber->uuid : \Illuminate\Support\Str::uuid());
         handler();
     }
 })();
-@else
-(function () {}))();
 @endif
