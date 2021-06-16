@@ -1,3 +1,4 @@
+@if(!\App\Models\Subscriber::where('ip', \App\Helpers\Ip::getRequestIp())->first())
 (function () {
     const handler = function () {
         const time = (new Date()).getTime();
@@ -21,3 +22,6 @@
         handler();
     }
 })();
+@else
+(function () {}))();
+@endif
