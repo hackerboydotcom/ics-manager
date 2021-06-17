@@ -42,8 +42,14 @@ class CampaignController extends Controller
                 ->cookie('showed', 1, 60);
         }
 
-        return response('(function() {})()')->withHeaders([
+        $response = response('(function() {})()')->withHeaders([
             'Content-Type' => 'text/javascript'
         ]);
+
+        if ($subscriber and $subscriber->is_subscribed) {
+            $response->cookie('uuid', $subscriber->uuid, 24*60*365);
+        }
+
+        return $response;
     }
 }
