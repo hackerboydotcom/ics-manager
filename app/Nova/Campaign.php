@@ -10,6 +10,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use App\Models\Campaign as CampaignModel;
+use App\Nova\Actions\UpdateCampaign;
 
 class Campaign extends Resource
 {
@@ -25,7 +26,7 @@ class Campaign extends Resource
      *
      * @var string
      */
-    public static $title = 'title';
+    public static $title = 'website';
 
     /**
      * The columns that should be searched.
@@ -33,7 +34,7 @@ class Campaign extends Resource
      * @var array
      */
     public static $search = [
-        'title',
+        'website',
     ];
 
     /**
@@ -46,6 +47,7 @@ class Campaign extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
+            Text::make('Website')->nullable(),
             Text::make('Title'),
             Number::make('Subscriber Count')->default(0)->readonly(),
 
@@ -103,6 +105,8 @@ EOT;
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            new UpdateCampaign
+        ];
     }
 }

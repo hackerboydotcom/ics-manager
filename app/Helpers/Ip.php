@@ -16,7 +16,7 @@ class Ip
             return $_SERVER['HTTP_CF_CONNECTING_IP'];
         }
 
-        return @$_SERVER['REMOTE_ADDR'] ?: '';
+        return request()->ip() ?: @$_SERVER['REMOTE_ADDR'];
     }
 
     /**

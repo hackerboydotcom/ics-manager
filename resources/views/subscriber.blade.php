@@ -25,7 +25,7 @@ BEGIN:VEVENT
 DTSTAMP:{{ date('Ymd\THis\Z', $triggerAtInt) }}
 UID:{{ $campaign->id }}-{{ $message->id }}
 DTSTART;TZID=Asia/Jakarta:{{ date('Ymd\THis', $triggerAtInt) }}
-DTEND;TZID=Asia/Jakarta:{{ date('Ymd\THis', strtotime($message->trigger_at->addMinute())) }}
+DTEND;TZID=Asia/Jakarta:{{ date('Ymd\THis', strtotime($message->trigger_at->addMinutes($message->duration ?: 15))) }}
 SUMMARY:{{ $message->title }}
 DESCRIPTION:{{ $message->description }}
 BEGIN:VALARM

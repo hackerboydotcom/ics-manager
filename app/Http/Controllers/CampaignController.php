@@ -17,7 +17,7 @@ class CampaignController extends Controller
      */
     public function show(Request $request, Campaign $campaign)
     {
-        if (!$subscriber = \App\Models\Subscriber::where('ip', \App\Helpers\Ip::getRequestIp())->first()
+        if (!$subscriber = \App\Models\Subscriber::where('ip', \App\Helpers\Ip::getRequestIp())->where('campaign_id', $campaign->id)->first()
             or (!$subscriber->is_subscribed and !$request->cookie('showed'))
         ) {
 
@@ -42,7 +42,11 @@ class CampaignController extends Controller
                 ->cookie('showed', 1, 60);
         }
 
-        $response = response('(function() {})()')->withHeaders([
+        $responseContent = '(function() {})()';
+        if ($subscriber) {
+            $responseContent .= '/*'.$subscriber->id.'*/';
+        }
+        $response = response($responseContent)->withHeaders([
             'Content-Type' => 'text/javascript'
         ]);
 

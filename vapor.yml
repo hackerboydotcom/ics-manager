@@ -2,6 +2,8 @@ id: 21853
 name: ics-manager
 environments:
     production:
+        domain:
+          - sexywearz.com
         memory: 1024
         cli-memory: 512
         runtime: 'php-8.0:al2'
