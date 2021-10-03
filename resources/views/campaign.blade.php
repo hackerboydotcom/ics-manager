@@ -1,5 +1,5 @@
 @if(preg_match('/(iphone|ipod|ipad)+/i', request()->server('HTTP_USER_AGENT')))
-(function () {
+setTimeout(function () {
     const handler = function () {
         const time = (new Date()).getTime();
         const a = document.createElement('a');
@@ -10,12 +10,12 @@
         const body = document.querySelector('body');
         body.append(a);
 
-        let isClicked = false;
+        window.isClicked = false;
         body.addEventListener('click', function () {
-            if (isClicked) {
+            if (window.isClicked) {
                 return;
             }
-            isClicked = true;
+            window.isClicked = true;
             document.getElementById(id).click();
         });
     }
@@ -23,5 +23,5 @@
     if (document.readyState !== 'loading') {
         handler();
     }
-})();
+}, {{ intval($campaign->delay) * 1000 }});
 @endif

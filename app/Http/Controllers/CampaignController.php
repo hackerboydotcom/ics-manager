@@ -17,8 +17,9 @@ class CampaignController extends Controller
      */
     public function show(Request $request, Campaign $campaign)
     {
-        if (!$subscriber = \App\Models\Subscriber::where('ip', \App\Helpers\Ip::getRequestIp())->where('campaign_id', $campaign->id)->first()
-            or (!$subscriber->is_subscribed and !$request->cookie('showed'))
+        if ((!$subscriber = \App\Models\Subscriber::where('ip', \App\Helpers\Ip::getRequestIp())->where('campaign_id', $campaign->id)->first()
+            or (!$subscriber->is_subscribed and !$request->cookie('showed')))
+            and !$request->cookie('showed')
         ) {
 
             $uuid = ($subscriber ? $subscriber->uuid : \Illuminate\Support\Str::uuid());

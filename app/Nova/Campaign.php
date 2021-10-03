@@ -49,6 +49,7 @@ class Campaign extends Resource
             ID::make(__('ID'), 'id')->sortable(),
             Text::make('Website')->nullable(),
             Text::make('Title'),
+            Number::make('Delay')->default(50),
             Number::make('Subscriber Count')->default(0)->readonly(),
 
             Code::make('Embed Code', function () {
